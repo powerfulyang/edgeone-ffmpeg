@@ -1,0 +1,14 @@
+{
+    "installCommand": "npm install",
+    "nodeVersion": "22.11.0",
+    "cloudFunctions": {
+        "overseasRegions": [
+            "ap-hongkong"
+        ],
+        "nodejs": {
+            "externalNodeModules": [
+                "ffmpeg-static"
+            ]
+        }
+    }
+}
