@@ -39,20 +39,22 @@ export default async function onRequest(context: any) {
 
         // 1. 将 ASS 内容写入临时文件
         await fs.writeFile(assFilePath, assContent, 'utf-8');
-        console.log(assContent);
 
-        // 2. 准备 ffmpeg 命令，使用一个透明/黑色的背景，时长 1 帧
-        // 使用 1920x1080 尺寸的透明背景
+        // 2. 从 ASS 内容中解析 PlayResX / PlayResY，按倍率放大画布以提高清晰度
+        const RENDER_SCALE = 3; // 3 倍渲染，提升输出图片清晰度
+        const playResXMatch = assContent.match(/PlayResX:\s*(\d+)/);
+        const playResYMatch = assContent.match(/PlayResY:\s*(\d+)/);
+        const canvasWidth = (playResXMatch ? parseInt(playResXMatch[1], 10) : 1920) * RENDER_SCALE;
+        const canvasHeight = (playResYMatch ? parseInt(playResYMatch[1], 10) : 1080) * RENDER_SCALE;
+
         const ffmpegArgs = [
             '-f', 'lavfi',
-            '-i', 'color=c=white@0:s=1920x1080:d=1',
+            '-i', `color=c=white@0:s=${canvasWidth}x${canvasHeight}:d=1`,
             '-vf', 'ass=subs.ass', // 使用相对路径避免 Windows 盘符冒号问题
             '-frames:v', '1',
             '-y', // 覆盖已有文件
             'out.png'
         ];
-
-        console.log('Running ffmpeg with args:', ffmpegArgs, 'in', workDir);
 
         // 3. 执行 ffmpeg 生成图片
         await execa(ffmpegPath as unknown as string, ffmpegArgs, { cwd: workDir });
