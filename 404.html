@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="404 - Page Not Found | EdgeOne FFmpeg. The frame you are looking for is missing from the stream.">
+    <title>404: Frame Not Found | EdgeOne FFmpeg</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary-glow: rgba(236, 72, 153, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --gradient-text: linear-gradient(135deg, #3b82f6, #9333ea, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Ambient Background Effects */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .glow-1, .glow-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .glow-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary-glow);
+            top: -100px;
+            left: -100px;
+        }
+
+        .glow-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary-glow);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, 50px) scale(1.1); }
+            50% { transform: translate(50px, 150px) scale(0.9); }
+            75% { transform: translate(-50px, 100px) scale(1.05); }
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .error-code {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(120px, 20vw, 200px);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 20px;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -5px;
+            animation: pulse 4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            border: none;
+            background: linear-gradient(135deg, #6366f1, #d946ef);
+            color: white;
+            box-shadow: 0 4px 20px rgba(217, 70, 239, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(217, 70, 239, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .status-badge {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ef4444;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+
+        /* Terminal Window Detail */
+        .error-log {
+            margin-top: 48px;
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #a0aabf;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .log-line {
+            margin-bottom: 4px;
+        }
+
+        .log-error { color: #ff5f56; }
+        .log-warn { color: #ffbd2e; }
+        .log-info { color: #60a5fa; }
+
+    </style>
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <div class="container">
+        <div class="status-badge" id="error-status">ERROR: SEEK_FAILED</div>
+        <div class="error-code">404</div>
+        <h1>Frame Not Found</h1>
+        <p>The stream ended unexpectedly or the segment you requested is missing from the buffer.</p>
+        
+        <a href="/" class="btn" id="home-link">Back to Main Stream</a>
+
+        <div class="error-log">
+            <div class="log-line"><span class="log-info">[info]</span> Opening 'page_request'...</div>
+            <div class="log-line"><span class="log-warn">[warn]</span> Segment not found in edge cache.</div>
+            <div class="log-line"><span class="log-error">[error]</span> FFmpeg: Protocol not found</div>
+            <div class="log-line"><span class="log-error">[fatal]</span> 404 Not Found</div>
+        </div>
+    </div>
+</body>
+</html>

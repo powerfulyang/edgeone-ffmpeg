@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EdgeOne FFmpeg - Powerful serverless FFmpeg execution at the edge. Render ASS subtitles, convert media, and process videos lightning fast.">
+    <title>EdgeOne FFmpeg | Serverless Media Processing</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --secondary-glow: rgba(236, 72, 153, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --gradient-text: linear-gradient(135deg, #3b82f6, #9333ea, #ec4899);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Background Effects */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .glow-1, .glow-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .glow-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--primary-glow);
+            top: -100px;
+            left: -100px;
+        }
+
+        .glow-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary-glow);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(100px, 50px) scale(1.1); }
+            50% { transform: translate(50px, 150px) scale(0.9); }
+            75% { transform: translate(-50px, 100px) scale(1.05); }
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .text-gradient {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Layout & Navbar */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            display: inline-block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #d946ef);
+            color: white;
+            box-shadow: 0 4px 20px rgba(217, 70, 239, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(217, 70, 239, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn-glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .btn-glass:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .hero-badge {
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #818cf8;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 80px);
+            line-height: 1.1;
+            letter-spacing: -2px;
+            max-width: 900px;
+        }
+
+        .hero p {
+            font-size: clamp(18px, 2vw, 22px);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 24px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 80px;
+            scroll-margin-top: 100px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(0,0,0,0.02) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.03);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 24px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            color: var(--text-secondary);
+        }
+
+        /* Demo Window */
+        .demo-window {
+            margin: 60px auto 0;
+            max-width: 900px;
+            width: 100%;
+            background: #1e1e1e;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+            text-align: left;
+            scroll-margin-top: 100px;
+        }
+
+        .demo-header {
+            background: #2d2d2d;
+            padding: 12px 20px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #404040;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .demo-body {
+            padding: 40px;
+            font-family: 'Courier New', Courier, monospace;
+            color: #a0aabf;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .token-cmd { color: #60a5fa; font-weight: bold; }
+        .token-arg { color: #f472b6; }
+        .token-val { color: #c084fc; }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 40px; }
+            .hero-actions { flex-direction: column; width: 100%; max-width: 300px; }
+            .demo-body { padding: 20px; font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient-bg">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <div class="container">
+        <nav>
+            <div class="logo">
+                <img src="/favicon.svg" alt="EdgeOne FFmpeg Logo" class="logo-icon">
+                EdgeOne FFmpeg
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-badge">✨ New: EdgeOne Serverless Runtime Support</div>
+            <h1>Next-Gen Media Processing at the <span class="text-gradient">Edge</span></h1>
+            <p>Execute FFmpeg binaries directly in your EdgeOne serverless functions. Instantly render ASS subtitles and process media with zero infrastructure overhead.</p>
+            <div class="hero-actions">
+                <a href="#demo" class="btn btn-primary">Start Building</a>
+                <a href="#features" class="btn btn-glass">Explore Features</a>
+            </div>
+
+            <div class="demo-window" id="demo">
+                <div class="demo-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                </div>
+                <div class="demo-body">
+                    <span class="token-cmd">POST</span> /api/render-ass HTTP/1.1<br>
+                    Host: api.edgeone.local<br>
+                    Content-Type: text/plain<br><br>
+                    <span class="token-val">[Script Info]</span><br>
+                    ScriptType: v4.00+<br>
+                    PlayResX: 1920<br>
+                    PlayResY: 1080<br>
+                    <span class="token-val">[Events]</span><br>
+                    Dialogue: 0,0:00:00.00,0:00:05.00,Default,,0,0,0,,{\pos(960,540)\an5}Hello EdgeOne FFmpeg!<br><br>
+                    <span style="color: #27c93f;">// EdgeOne FFmpeg rendering in progress...</span><br>
+                    <span style="color: #27c93f;">// Processing ASS filter -> 1920x1080 Frame</span><br>
+                    &gt; Executing: ffmpeg -f lavfi -i color=... -vf ass=temp.ass out.png<br>
+                    <span style="color: #60a5fa;">&gt; Success: 200 OK (image/png)</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="features">
+            <div class="card">
+                <div class="card-icon">🎬</div>
+                <h3>ASS Subtitle Rendering</h3>
+                <p>Natively support Advanced Substation Alpha (.ass) scripts. Render rich text, effects, and styles directly to high-quality images via API.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">⚡</div>
+                <h3>Serverless Execution</h3>
+                <p>Run static FFmpeg binaries via execa inside the EdgeOne environment. No more managing containers or heavy VMs—just serverless speed.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎨</div>
+                <h3>Dynamic Overlays</h3>
+                <p>Generate highly customizable graphics, watermarks, and video frame overlays on the fly using FFmpeg's robust libass integration.</p>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
